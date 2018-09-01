@@ -33,22 +33,58 @@ let Player = function() {
     
     // Member variables, used in prototype functions
     this.sprite = 'images/char-boy.png';
-    this.IMG_WIDTH = 101; // The width of the sprites/images
-    this.IMG_HEIGHT = 83; // The width of the sprites/images
+    this.SPRITE_WIDTH = 101; // The width of the sprites/images
+    this.SPRITE_HEIGHT = 83; // The width of the sprites/images
 
     // Vertical displacement to position the player objct relatively centered on
     // the game scene's blocks (grass, rock, water) 
     this.Y_DISPLACEMENT = 32;
 
     this.xMin = 0;
-    this.xMax = 4 * this.IMG_WIDTH; // 5th column (max) (5 - 1 image width)
+    this.xMax = 4 * this.SPRITE_WIDTH; // 5th column (max) (5 - 1 image width)
     this.yMin = -this.Y_DISPLACEMENT; // Top row (1st)
-    this.yMax = (5 * this.IMG_HEIGHT) - this.Y_DISPLACEMENT; // Bottom row (6th)
+    this.yMax = (5 * this.SPRITE_HEIGHT) - this.Y_DISPLACEMENT; // Bottom row (6th)
 
     // Player always starts at the bottom row (6th)
     this.y = this.yMax;
     // Pick a random column as a start position for the player (5 columns total)
-    this.x = (Math.floor(Math.random() * Math.floor(5))) * this.IMG_WIDTH;
+    this.x = (Math.floor(Math.random() * Math.floor(5))) * this.SPRITE_WIDTH;
+};
+
+Player.prototype.handleInput = function(key) {
+    switch (key) {
+        case 'up':
+            this.y -= this.SPRITE_HEIGHT;
+            // Use <= to detect game winning once it happens
+            if (this.y <= this.yMin) {
+                this.y = this.yMin;
+            }
+            break;
+
+        case 'down':
+            this.y += this.SPRITE_HEIGHT;
+            if (this.y > this.yMax) {
+                this.y = this.yMax;
+            }
+            break;
+
+        case 'left':
+            this.x -= this.SPRITE_WIDTH;
+            if (this.x < this.xMin) {
+                this.x = this.xMin;
+            }
+            break;
+
+        case 'right':
+            this.x += this.SPRITE_WIDTH;
+            if (this.x > this.xMax) {
+                this.x = this.xMax;
+            }
+            break;
+
+        default:
+            break;
+    }
 };
 
 Player.prototype.render = function() {
