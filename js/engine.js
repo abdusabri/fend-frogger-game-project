@@ -31,33 +31,33 @@ var Engine = (function(global) {
     // Now instantiate your objects.
     // Place all enemy objects in an array called allEnemies
     // Place the player object in a variable called player
-    window.player = new Player();
-    window.allEnemies = [new Enemy(), // Generate 5 enemies
-        new Enemy(),
-        new Enemy(),
-        new Enemy(),
-        new Enemy()
-    ];
+    // window.player = new Player();
+    // window.allEnemies = [new Enemy(), // Generate 5 enemies
+    //     new Enemy(),
+    //     new Enemy(),
+    //     new Enemy(),
+    //     new Enemy()
+    // ];
 
     // This listens for key presses and sends the keys to your
     // Player.handleInput() method. You don't need to modify this.
-    document.addEventListener('keyup', function(e) {
-        var allowedKeys = {
-            37: 'left',
-            38: 'up',
-            39: 'right',
-            40: 'down'
-        };
+    // document.addEventListener('keyup', function(e) {
+    //     var allowedKeys = {
+    //         37: 'left',
+    //         38: 'up',
+    //         39: 'right',
+    //         40: 'down'
+    //     };
 
-        player.handleInput(allowedKeys[e.keyCode]);
-    });
+    //     player.handleInput(allowedKeys[e.keyCode]);
+    // });
 
-    doc.addEventListener('game-won', () => {
-        // TODO: Show a meassge and ask to play again
-        setTimeout(() => {
-            player = new Player() 
-        }, 750);
-    });
+    // doc.addEventListener('game-won', () => {
+    //     // TODO: Show a meassge and ask to play again
+    //     setTimeout(() => {
+    //         player = new Player() 
+    //     }, 750);
+    // });
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -94,9 +94,49 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
-        lastTime = Date.now();
-        main();
+        // Allow the user to select a player before starting the game
+        handlePlayerSelection();
+        // reset();
+        // lastTime = Date.now();
+        // main();
+    }
+
+    function handlePlayerSelection() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        renderPlayerSelectionText();
+        renderBoyPlayer();
+        renderGirlPlayer();
+    }
+
+    function renderPlayerSelectionText() {
+        ctx.font = "40px Comic Sans MS";
+        ctx.fillStyle = "blue";
+        ctx.textAlign = "center";
+        ctx.fillText("Select a Player", canvas.width/2, 100);
+
+        ctx.font = "40px Comic Sans MS";
+        ctx.strokeText("Select a Player",canvas.width/2, 100);
+
+        ctx.font = "18px Comic Sans MS";
+        ctx.fillStyle = "black";
+        ctx.fillText("Use Left and Right arrows, and then", canvas.width/2, 150);
+        ctx.fillText("press Space to start the game", canvas.width/2, 170);
+    }
+
+    function renderBoyPlayer(selected = true) {
+        // Position the boy sprite in the 2nd column and 4th row
+        if (selected) {
+            ctx.drawImage(Resources.get('images/Selector.png'), 1 * 101, 3 * 83);
+        }
+        ctx.drawImage(Resources.get('images/char-boy.png'), 1 * 101, 3 * 83);
+    }
+
+    function renderGirlPlayer(selected = false) {
+        // Position the girl sprite in the 4th column and 4th row
+        if (selected) {
+            ctx.drawImage(Resources.get('images/Selector.png'), 3 * 101, 3 * 83);
+        }
+        ctx.drawImage(Resources.get('images/char-horn-girl.png'), 3 * 101, 3 * 83);
     }
 
     /* This function is called by main (our game loop) and itself calls all
