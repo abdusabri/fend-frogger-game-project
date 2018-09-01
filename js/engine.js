@@ -86,7 +86,44 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+    }
+
+    function checkCollisions() {
+        // Factor to use to allow for some overlap between the sprites
+        // before a collision is considered to have happened (not to early or too late)
+        const COLL_FACTOR = 3;
+        const SPRITE_WIDTH = 101;
+        const SPRITE_HEIGHT = 83;
+
+        // Use rectangles to check for collisions
+        allEnemies.forEach(function(enemy) {
+            let r1 = {
+                left: enemy.x,
+                right: (enemy.x + SPRITE_WIDTH) - (SPRITE_WIDTH/COLL_FACTOR),
+                top: enemy.y,
+                bottom: (enemy.y + SPRITE_HEIGHT) - (SPRITE_HEIGHT/COLL_FACTOR)
+            };
+
+            let r2 = {
+                left: player.x,
+                right: (player.x + SPRITE_WIDTH) - (SPRITE_WIDTH/COLL_FACTOR),
+                top: player.y,
+                bottom: (player.y + SPRITE_HEIGHT) - (SPRITE_HEIGHT/COLL_FACTOR)
+            };
+
+            if (intersectRect(r1, r2)) {
+                player = new Player();
+            }
+        });
+
+        // https://stackoverflow.com/questions/2752349/fast-rectangle-to-rectangle-intersection
+        function intersectRect(r1, r2) {
+            return !(r2.left > r1.right || 
+                r2.right < r1.left || 
+                r2.top > r1.bottom ||
+                r2.bottom < r1.top);
+        }
     }
 
     /* This is called by the update function and loops through all of the
