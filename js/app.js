@@ -53,6 +53,13 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+
+// Regarding the update function:
+// I believe this method is not needed for the player object, unlike enemies,
+// the player will always remain in its position until an arrow is pressed, and then
+// the relevant x and y position updates are maanaged in the handleInput function.
+// I believe this is more efficient than implementing the logic in an update function that 
+// is called very frequently without effectively changing the player's position
 let Player = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started

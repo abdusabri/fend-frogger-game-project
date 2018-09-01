@@ -137,7 +137,11 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        //TODO: uncomment
+        // I believe this method is not needed for the player object, unlike enemies,
+        // the player will always remain in its position until an arrow is pressed, and then
+        // the relevant x and y position updates are maanaged in the handleInput function.
+        // I believe this is more efficient than implementing the logic in an update function that 
+        // is called very frequently without effectively changing the player's position
         // player.update();
     }
 
