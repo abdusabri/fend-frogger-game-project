@@ -60,7 +60,7 @@ Enemy.prototype.render = function() {
 // the relevant x and y position updates are maanaged in the handleInput function.
 // I believe this is more efficient than implementing the logic in an update function that 
 // is called very frequently without effectively changing the player's position
-let Player = function() {
+let Player = function(sprite = 'images/char-boy.png') {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -68,7 +68,7 @@ let Player = function() {
     // a helper we've provided to easily load images
     
     // Member variables, used in prototype functions
-    this.sprite = 'images/char-boy.png';
+    this.sprite = sprite;
     this.SPRITE_WIDTH = 101; // The width of the sprites/images
     this.SPRITE_HEIGHT = 83; // The width of the sprites/images
 

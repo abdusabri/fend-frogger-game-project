@@ -22,42 +22,14 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime, 
+        // Will be used to start the game with the user-selected player
+        // Boy is selected by default
+        isBoySelected = true; 
 
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
-
-    // Now instantiate your objects.
-    // Place all enemy objects in an array called allEnemies
-    // Place the player object in a variable called player
-    // window.player = new Player();
-    // window.allEnemies = [new Enemy(), // Generate 5 enemies
-    //     new Enemy(),
-    //     new Enemy(),
-    //     new Enemy(),
-    //     new Enemy()
-    // ];
-
-    // This listens for key presses and sends the keys to your
-    // Player.handleInput() method. You don't need to modify this.
-    // document.addEventListener('keyup', function(e) {
-    //     var allowedKeys = {
-    //         37: 'left',
-    //         38: 'up',
-    //         39: 'right',
-    //         40: 'down'
-    //     };
-
-    //     player.handleInput(allowedKeys[e.keyCode]);
-    // });
-
-    // doc.addEventListener('game-won', () => {
-    //     // TODO: Show a meassge and ask to play again
-    //     setTimeout(() => {
-    //         player = new Player() 
-    //     }, 750);
-    // });
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -96,9 +68,6 @@ var Engine = (function(global) {
     function init() {
         // Allow the user to select a player before starting the game
         handlePlayerSelection();
-        // reset();
-        // lastTime = Date.now();
-        // main();
     }
 
     function handlePlayerSelection() {
@@ -106,7 +75,7 @@ var Engine = (function(global) {
         renderPlayerSelectionText();
         renderBoyPlayer();
         renderGirlPlayer();
-
+        
         document.addEventListener('keyup', handleKeyUpEventForPlayerSelection);
     }
 
@@ -155,6 +124,7 @@ var Engine = (function(global) {
                     renderPlayerSelectionText();
                     renderBoyPlayer(true);
                     renderGirlPlayer(false);
+                    isBoySelected = true;
                     break;
                 
                 case 'right':
@@ -162,16 +132,57 @@ var Engine = (function(global) {
                     renderPlayerSelectionText();
                     renderBoyPlayer(false);
                     renderGirlPlayer(true);
+                    isBoySelected = false;
                     break;
 
                 case 'space':
-                    
+                    document.removeEventListener('keyup', handleKeyUpEventForPlayerSelection);
+                    startGame(isBoySelected);
                     break;
 
                 default:
                     break;
             }
         })(allowedKeys[e.keyCode]);
+    }
+
+    function startGame(isBoySelected) {
+        // Now instantiate your objects.
+        // Place all enemy objects in an array called allEnemies
+        // Place the player object in a variable called player
+        window.player = new Player((isBoySelected)? 'images/char-boy.png' : 'images/char-horn-girl.png');
+        window.allEnemies = [new Enemy(), // Generate 5 enemies
+            new Enemy(),
+            new Enemy(),
+            new Enemy(),
+            new Enemy()
+        ];
+
+        // This listens for key presses and sends the keys to your
+        // Player.handleInput() method. You don't need to modify this.
+        document.addEventListener('keyup', function(e) {
+            var allowedKeys = {
+                37: 'left',
+                38: 'up',
+                39: 'right',
+                40: 'down'
+            };
+
+            player.handleInput(allowedKeys[e.keyCode]);
+        });
+
+        // Listen to the game winning event, which will be fired from
+        // the player object
+        document.addEventListener('game-won', () => {
+            // TODO: Show a meassge and ask to play again
+            setTimeout(() => {
+                player = new Player((isBoySelected)? 'images/char-boy.png' : 'images/char-horn-girl.png') 
+            }, 750);
+        });
+
+        // Start the game normally as before
+        lastTime = Date.now();
+        main();
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -212,7 +223,7 @@ var Engine = (function(global) {
             };
 
             if (intersectRect(r1, r2)) {
-                player = new Player();
+                player = new Player((isBoySelected)? 'images/char-boy.png' : 'images/char-horn-girl.png');
             }
         });
 
