@@ -25,11 +25,17 @@ var Enemy = function() {
     this.SPEED_OPTIONS = [0.5, 1, 1.5, 1.75, 2];
     // Randomly pick a speed factor from the speed options array
     this.speedFactor = this.SPEED_OPTIONS[Math.floor(Math.random() * this.SPEED_OPTIONS.length)];
+
+    // Will be used to stop enemy movements once the game is one
+    this.stop = false;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
+    if (this.stop) {
+        return;
+    }
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -85,9 +91,16 @@ let Player = function(sprite = 'images/char-boy.png') {
     this.y = this.yMax;
     // Pick a random column as a start position for the player (5 columns total)
     this.x = (Math.floor(Math.random() * Math.floor(5))) * this.SPRITE_WIDTH;
+
+    // Will be used to stop player movements once the game is won
+    this.stop = false;
 };
 
 Player.prototype.handleInput = function(key) {
+    if (this.stop) {
+        return;
+    }
+
     switch (key) {
         case 'up':
             this.y -= this.SPRITE_HEIGHT;
@@ -96,7 +109,6 @@ Player.prototype.handleInput = function(key) {
                 this.y = this.yMin;
                 // Fire a game winning event event, where the engine listens for
                 document.dispatchEvent(new CustomEvent("game-won"));
-                // TODO: Remove event listner once game is won
             }
             break;
 

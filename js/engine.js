@@ -174,10 +174,11 @@ var Engine = (function(global) {
         // Listen to the game winning event, which will be fired from
         // the player object
         document.addEventListener('game-won', () => {
-            // TODO: Show a meassge and ask to play again
+            player.stop = true;
+            allEnemies.forEach(enemy => enemy.stop = true);
             setTimeout(() => {
-                player = new Player((isBoySelected)? 'images/char-boy.png' : 'images/char-horn-girl.png') 
-            }, 750);
+                //player = new Player((isBoySelected)? 'images/char-boy.png' : 'images/char-horn-girl.png') 
+            }, 1000);
         });
 
         // Start the game normally as before
