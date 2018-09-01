@@ -106,6 +106,8 @@ var Engine = (function(global) {
         renderPlayerSelectionText();
         renderBoyPlayer();
         renderGirlPlayer();
+
+        document.addEventListener('keyup', handleKeyUpEventForPlayerSelection);
     }
 
     function renderPlayerSelectionText() {
@@ -137,6 +139,39 @@ var Engine = (function(global) {
             ctx.drawImage(Resources.get('images/Selector.png'), 3 * 101, 3 * 83);
         }
         ctx.drawImage(Resources.get('images/char-horn-girl.png'), 3 * 101, 3 * 83);
+    }
+
+    function handleKeyUpEventForPlayerSelection(e) {
+        var allowedKeys = {
+            37: 'left',
+            39: 'right',
+            32: 'space'
+        };
+
+        (function(key) {
+            switch (key) {
+                case 'left':
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    renderPlayerSelectionText();
+                    renderBoyPlayer(true);
+                    renderGirlPlayer(false);
+                    break;
+                
+                case 'right':
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    renderPlayerSelectionText();
+                    renderBoyPlayer(false);
+                    renderGirlPlayer(true);
+                    break;
+
+                case 'space':
+                    
+                    break;
+
+                default:
+                    break;
+            }
+        })(allowedKeys[e.keyCode]);
     }
 
     /* This function is called by main (our game loop) and itself calls all
