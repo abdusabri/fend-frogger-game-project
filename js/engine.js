@@ -97,10 +97,9 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        //TODO: uncomment
-        // allEnemies.forEach(function(enemy) {
-        //     enemy.update(dt);
-        // });
+        allEnemies.forEach(function(enemy) {
+            enemy.update(dt);
+        });
         //TODO: uncomment
         // player.update();
     }

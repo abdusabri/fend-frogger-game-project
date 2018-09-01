@@ -18,6 +18,13 @@ var Enemy = function() {
     // generate a random number excluding 0 (water row) and 3 (just before the grass rows)
     this.y = ((Math.floor(Math.random() * Math.floor(3)) + 1) * 
         this.SPRITE_HEIGHT) - this.Y_DISPLACEMENT;
+
+    // Default speed for an enemy object in pixels (2 sprites-width)
+    this.NORMAL_SPEED = 202;
+    // Different speed options to be randomly assigned to each enemy object when created
+    this.SPEED_OPTIONS = [0.5, 1, 1.5, 1.75, 2];
+    // Randomly pick a speed factor from the speed options array
+    this.speedFactor = this.SPEED_OPTIONS[Math.floor(Math.random() * this.SPEED_OPTIONS.length)];
 };
 
 // Update the enemy's position, required method for game
@@ -26,6 +33,16 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x += this.NORMAL_SPEED * this.speedFactor * dt;
+    
+    // If the object goes off-canvas, reset X and randomly assign Y location. 
+    // Also, randomly change the speed factor
+    if (this.x > 505) { // 505 is the canvas width 
+        this.speedFactor = this.SPEED_OPTIONS[Math.floor(Math.random() * this.SPEED_OPTIONS.length)];
+        this.x = -this.SPRITE_WIDTH;
+        this.y = ((Math.floor(Math.random() * Math.floor(3)) + 1) * 
+            this.SPRITE_HEIGHT) - this.Y_DISPLACEMENT;
+    }
 };
 
 // Draw the enemy on the screen, required method for game
