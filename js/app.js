@@ -6,6 +6,18 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.SPRITE_WIDTH = 101; // The width of the sprites/images
+    this.SPRITE_HEIGHT = 83; // The width of the sprites/images
+
+    // Vertical displacement to position enemy objcts relatively centered on
+    // the game scene's blocks (grass, rock, water) 
+    this.Y_DISPLACEMENT = 25;
+
+    this.x = -this.SPRITE_WIDTH; // Enemies always start just off-canvas
+    // Pick a random row as a start position for the enemy
+    // generate a random number excluding 0 (water row) and 3 (just before the grass rows)
+    this.y = ((Math.floor(Math.random() * Math.floor(3)) + 1) * 
+        this.SPRITE_HEIGHT) - this.Y_DISPLACEMENT;
 };
 
 // Update the enemy's position, required method for game
@@ -99,6 +111,12 @@ Player.prototype.render = function() {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 window.player = new Player();
+window.allEnemies = [new Enemy(), // Generate 5 enemies
+    new Enemy(),
+    new Enemy(),
+    new Enemy(),
+    new Enemy()
+];
 
 
 // This listens for key presses and sends the keys to your
