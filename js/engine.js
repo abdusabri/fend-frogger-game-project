@@ -25,7 +25,9 @@ var Engine = (function(global) {
         lastTime, 
         // Will be used to start the game with the user-selected player
         // Boy is selected by default
-        isBoySelected = true; 
+        isBoySelected = true;
+        // Used to stop re-rendering after the game is won
+        isGameWon = false;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -35,6 +37,9 @@ var Engine = (function(global) {
      * and handles properly calling the update and render methods.
      */
     function main() {
+        if (isGameWon) {
+            return;
+        }
         /* Get our time delta information which is required if your game
          * requires smooth animation. Because everyone's computer processes
          * instructions at different speeds we need a constant value that
@@ -160,30 +165,93 @@ var Engine = (function(global) {
 
         // This listens for key presses and sends the keys to your
         // Player.handleInput() method. You don't need to modify this.
-        document.addEventListener('keyup', function(e) {
-            var allowedKeys = {
-                37: 'left',
-                38: 'up',
-                39: 'right',
-                40: 'down'
-            };
-
-            player.handleInput(allowedKeys[e.keyCode]);
-        });
+        // Using a named function as a reference is more suitable to my 
+        // implementation. If I use an anonymous function, each time the 
+        // game is reset after winning, the event will be handled an 
+        // additional time (functions would still be in memory, and will
+        // will be executed). Of course a nmaed function is not the only
+        // solution, but this is the one i found more straightforward in 
+        // my opinion
+        document.addEventListener('keyup', handleKeyUpEventOnPlayer);
 
         // Listen to the game winning event, which will be fired from
         // the player object
         document.addEventListener('game-won', () => {
             player.stop = true;
             allEnemies.forEach(enemy => enemy.stop = true);
+            
             setTimeout(() => {
-                //player = new Player((isBoySelected)? 'images/char-boy.png' : 'images/char-horn-girl.png') 
-            }, 1000);
+                isGameWon = true;
+                // Game winning text is displayed, and the user can press Space
+                // to play again with the same player, or Esc to return to the player
+                // selection screen
+                renderGameWinningText();
+                // Listen to Esc and Space keyup events to reset the game accordingly
+                document.addEventListener('keyup', handleKeyUpEventOfGameWinning);
+            }, 750);
         });
 
         // Start the game normally as before
         lastTime = Date.now();
         main();
+    }
+
+    function handleKeyUpEventOnPlayer(e) {
+        var allowedKeys = {
+            37: 'left',
+            38: 'up',
+            39: 'right',
+            40: 'down'
+        };
+
+        player.handleInput(allowedKeys[e.keyCode]);
+    }
+
+    function renderGameWinningText() {
+        // https://stackoverflow.com/questions/20909585/html5-canvas-text-shadow-equivalent
+        ctx.font = "40px Comic Sans MS";
+        ctx.textAlign = "center";
+        ctx.shadowColor="white";
+        ctx.shadowBlur=7;
+        ctx.lineWidth=5;
+        ctx.strokeText("Congratulations!", canvas.width/2, 440);
+        ctx.shadowBlur=0;
+        ctx.fillStyle="blue";
+        ctx.fillText("Congratulations!", canvas.width/2, 440);
+
+        ctx.font = "18px Comic Sans MS";
+        ctx.fillStyle="white";
+        ctx.strokeText("Press Space to play again with same player, or", canvas.width/2, 500);
+        ctx.fillText("Press Space to play again with same player, or", canvas.width/2, 500);    
+        ctx.strokeText("Esc to select a player", canvas.width/2, 530);
+        ctx.fillText("Esc to select a player", canvas.width/2, 530);
+    }
+
+    function handleKeyUpEventOfGameWinning(e) {
+        var allowedKeys = {
+            27: 'esc',
+            32: 'space'
+        };
+
+        (function(key) {
+            switch (key) {
+                case 'esc':
+                    document.removeEventListener('keyup', handleKeyUpEventOfGameWinning);
+                    isGameWon = false;
+                    isBoySelected = true; // Reset is to the default value
+                    handlePlayerSelection();
+                    break;
+
+                case 'space':
+                    document.removeEventListener('keyup', handleKeyUpEventOfGameWinning);
+                    isGameWon = false;
+                    startGame(isBoySelected);
+                    break;
+
+                default:
+                    break;
+            }
+        })(allowedKeys[e.keyCode]);
     }
 
     /* This function is called by main (our game loop) and itself calls all
