@@ -58,6 +58,9 @@ Player.prototype.handleInput = function(key) {
             // Use <= to detect game winning once it happens
             if (this.y <= this.yMin) {
                 this.y = this.yMin;
+                // Fire a game winning event event, where the engine listens for
+                document.dispatchEvent(new CustomEvent("game-won"));
+                // TODO: Remove event listner once game is won
             }
             break;
 
