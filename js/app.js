@@ -24,12 +24,42 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+let Player = function() {
+    // Variables applied to each of our instances go here,
+    // we've provided one for you to get started
+
+    // The image/sprite for our enemies, this uses
+    // a helper we've provided to easily load images
+    
+    // Member variables, used in prototype functions
+    this.sprite = 'images/char-boy.png';
+    this.IMG_WIDTH = 101; // The width of the sprites/images
+    this.IMG_HEIGHT = 83; // The width of the sprites/images
+
+    // Vertical displacement to position the player objct relatively centered on
+    // the game scene's blocks (grass, rock, water) 
+    this.Y_DISPLACEMENT = 32;
+
+    this.xMin = 0;
+    this.xMax = 4 * this.IMG_WIDTH; // 5th column (max) (5 - 1 image width)
+    this.yMin = -this.Y_DISPLACEMENT; // Top row (1st)
+    this.yMax = (5 * this.IMG_HEIGHT) - this.Y_DISPLACEMENT; // Bottom row (6th)
+
+    // Player always starts at the bottom row (6th)
+    this.y = this.yMax;
+    // Pick a random column as a start position for the player (5 columns total)
+    this.x = (Math.floor(Math.random() * Math.floor(5))) * this.IMG_WIDTH;
+};
+
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
+window.player = new Player();
 
 
 // This listens for key presses and sends the keys to your
