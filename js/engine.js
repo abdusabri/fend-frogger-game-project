@@ -223,8 +223,8 @@ var Engine = (function(global) {
         ctx.fillStyle="white";
         ctx.strokeText("Press Space to play again with same player, or", canvas.width/2, 500);
         ctx.fillText("Press Space to play again with same player, or", canvas.width/2, 500);    
-        ctx.strokeText("Esc to select a player", canvas.width/2, 530);
-        ctx.fillText("Esc to select a player", canvas.width/2, 530);
+        ctx.strokeText("Esc to go back to the player selection screen", canvas.width/2, 530);
+        ctx.fillText("Esc to go back to the player selection screen", canvas.width/2, 530);
     }
 
     function handleKeyUpEventOfGameWinning(e) {
